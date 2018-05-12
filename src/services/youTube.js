@@ -1,13 +1,10 @@
 angular.module('video-player')
-.service('youTube', function($window) {
-  ///build the object that is returned by the service.
-  // in this case the returnData key: with anom func that returns
-  // sample data.
-  this.returnData = function($http, key, query, max) {
-      $http({
+.service('youTube', function($http) {
+  this.getYouTubeData = function(key, query, max, cb) {
+    $http({
         method: 'GET',
         url: 'https://www.googleapis.com/youtube/v3/search',
-        data: {
+        params: {
             part: 'snippet',
             key: key,
             q: query,
@@ -15,13 +12,11 @@ angular.module('video-player')
             type: 'video',
             videoEmbeddable: 'true'
           }
-
       }).then(function (response) {
-           console.log(response.data)
-           this.videoData = response.data
-         }, function (reason) {
-           console.log(reason.data)
-           this.error = reason.data
-         })
-  }
+                  cb(response)
+                 }, function (reason) {
+                   this.error = reason.data
+                 }
+              )
+   }
 });
